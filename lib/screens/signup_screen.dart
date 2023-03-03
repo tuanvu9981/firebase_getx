@@ -1,4 +1,7 @@
+import 'package:firebase_getx/screens/login_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class SignUpScreen extends StatefulWidget {
   const SignUpScreen({Key? key}) : super(key: key);
@@ -131,6 +134,27 @@ class SignUpScreenState extends State<SignUpScreen> {
                   fontWeight: FontWeight.bold,
                   color: Colors.white,
                 ),
+              ),
+            ),
+          ),
+          const SizedBox(height: 25.0),
+          Center(
+            child: RichText(
+              text: TextSpan(
+                text: 'You\'ve got an account yet ? ',
+                style: TextStyle(fontSize: 20.0, color: Colors.grey),
+                children: [
+                  TextSpan(
+                    text: 'Sign In',
+                    style: const TextStyle(
+                      fontSize: 20.0,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () => Get.back(),
+                  ),
+                ],
               ),
             ),
           ),

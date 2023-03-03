@@ -1,4 +1,7 @@
+import 'package:firebase_getx/screens/signup_screen.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -67,6 +70,11 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                       child: TextField(
                         decoration: InputDecoration(
+                          hintText: 'Your email',
+                          prefixIcon: const Icon(
+                            Icons.email,
+                            color: Colors.deepOrangeAccent,
+                          ),
                           focusedBorder: fgBorder,
                           enabledBorder: fgBorder,
                           border: OutlineInputBorder(
@@ -95,6 +103,11 @@ class LoginScreenState extends State<LoginScreen> {
                 ),
                 child: TextField(
                   decoration: InputDecoration(
+                    hintText: 'Your password',
+                    prefixIcon: const Icon(
+                      Icons.password_outlined,
+                      color: Colors.deepOrangeAccent,
+                    ),
                     focusedBorder: fgBorder,
                     enabledBorder: fgBorder,
                     border: OutlineInputBorder(
@@ -138,17 +151,19 @@ class LoginScreenState extends State<LoginScreen> {
               const SizedBox(height: 40.0),
               Center(
                 child: RichText(
-                  text: const TextSpan(
+                  text: TextSpan(
                     text: 'Dont have an account ? ',
                     style: TextStyle(fontSize: 20.0, color: Colors.grey),
                     children: [
                       TextSpan(
                         text: 'Sign Up',
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 20.0,
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
+                        recognizer: TapGestureRecognizer()
+                          ..onTap = () => Get.to(const SignUpScreen()),
                       ),
                     ],
                   ),
