@@ -1,4 +1,6 @@
 import 'package:firebase_getx/screens/login_screen.dart';
+import 'package:firebase_getx/screens/signup_screen.dart';
+import 'package:firebase_getx/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -15,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const LoginScreen(),
+      home: const WelcomeScreen(),
     );
   }
 }
