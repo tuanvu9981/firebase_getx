@@ -113,6 +113,47 @@ class LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(fontSize: 20, color: Colors.grey[500]),
                 ),
               ),
+              const SizedBox(height: 40.0),
+              Container(
+                margin: const EdgeInsets.symmetric(horizontal: 60.0),
+                height: screenH * 0.08,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20.0),
+                  image: const DecorationImage(
+                    fit: BoxFit.cover,
+                    image: AssetImage('assets/images/loginbtn.png'),
+                  ),
+                ),
+                child: const Center(
+                  child: Text(
+                    "Sign In",
+                    style: TextStyle(
+                      fontSize: 30.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 40.0),
+              Center(
+                child: RichText(
+                  text: const TextSpan(
+                    text: 'Dont have an account ? ',
+                    style: TextStyle(fontSize: 20.0, color: Colors.grey),
+                    children: [
+                      TextSpan(
+                        text: 'Sign Up',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),
