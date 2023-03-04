@@ -3,6 +3,7 @@ linux/
 windows/
 macos/
 web/
+.vscode/
 
 # Miscellaneous
 *.class

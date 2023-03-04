@@ -1,6 +1,4 @@
 import 'package:firebase_getx/screens/login_screen.dart';
-import 'package:firebase_getx/screens/signup_screen.dart';
-import 'package:firebase_getx/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
