@@ -17,7 +17,7 @@ class AuthController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    user = auth.currentUser as Rx<User?>;
+    user = Rx<User?>(auth.currentUser);
 
     // notify user
     user.bindStream(auth.userChanges());
