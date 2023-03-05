@@ -1,3 +1,4 @@
+import 'package:firebase_getx/auth_controller.dart';
 import 'package:firebase_getx/screens/login_screen.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,9 @@ class SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var emailEditor = TextEditingController();
+    var passwordEditor = TextEditingController();
+
     var fgBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(20.0),
       borderSide: BorderSide(color: Colors.white, width: 1.0),
@@ -68,6 +72,7 @@ class SignUpScreenState extends State<SignUpScreen> {
                     ],
                   ),
                   child: TextField(
+                    controller: emailEditor,
                     decoration: InputDecoration(
                       hintText: 'Your email',
                       prefixIcon: const Icon(
@@ -101,6 +106,7 @@ class SignUpScreenState extends State<SignUpScreen> {
               ],
             ),
             child: TextField(
+              controller: passwordEditor,
               decoration: InputDecoration(
                 hintText: 'Your password',
                 prefixIcon: const Icon(
@@ -116,23 +122,31 @@ class SignUpScreenState extends State<SignUpScreen> {
             ),
           ),
           const SizedBox(height: 40.0),
-          Container(
-            margin: const EdgeInsets.symmetric(horizontal: 60.0),
-            height: screenHeight * 0.08,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              image: const DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage('assets/images/loginbtn.png'),
+          GestureDetector(
+            onTap: () {
+              AuthController.instance.register(
+                emailEditor.text.trim(),
+                passwordEditor.text.trim(),
+              );
+            },
+            child: Container(
+              margin: const EdgeInsets.symmetric(horizontal: 60.0),
+              height: screenHeight * 0.08,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20.0),
+                image: const DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/images/loginbtn.png'),
+                ),
               ),
-            ),
-            child: const Center(
-              child: Text(
-                "Sign Up",
-                style: TextStyle(
-                  fontSize: 30.0,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
+              child: const Center(
+                child: Text(
+                  "Sign Up",
+                  style: TextStyle(
+                    fontSize: 30.0,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
               ),
             ),
