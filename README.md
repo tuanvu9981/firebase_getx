@@ -21,3 +21,36 @@ Container(
     )
 )
 ```
+
+### Take note about Flutter
+1. Firebase FireStore refused to connect, and Flutter warned: "Caller had no permission".
+```
+rules_version = '2';
+service cloud.firestore {
+match /databases/{database}/documents {
+match /{document=**} {
+  allow read, write: if false;
+  }
+ }
+}
+```
+must be changed to:
+```
+rules_version = '2';
+service cloud.firestore {
+match /databases/{database}/documents {
+ match /{document=**} {
+  allow read, write: if request.auth != null;
+  }
+ }
+}
+```
+2. With StatefulWidget, when update value of attributes, it NEEDED TO WRITTEN INSIDE **setState**, or it will be **uninitialized**
+
+3. Fix bug: **minSdkVersion cannot be less than 19.0**
+```
+defaultConfig {    
+    applicationId "com.example.firebase_getx"
+    minSdkVersion 19
+}
+```
