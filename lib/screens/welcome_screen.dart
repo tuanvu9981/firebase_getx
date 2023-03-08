@@ -1,9 +1,12 @@
+import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_getx/auth_controller.dart';
 import 'package:firebase_getx/models/car.model.dart';
 import 'package:firebase_getx/models/fsuser.model.dart';
 import 'package:firebase_getx/widgets/car_card.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class WelcomeScreen extends StatefulWidget {
   final String uid;
@@ -14,10 +17,46 @@ class WelcomeScreen extends StatefulWidget {
 }
 
 class WelcomeScreenState extends State<WelcomeScreen> {
+  // instance collection
   final fsUsers = FirebaseFirestore.instance.collection('users');
   final fsCars = FirebaseFirestore.instance.collection('cars');
+
+  // instance storage
+  final storageRef = FirebaseStorage.instance.ref().child('avatars');
+
+  // variables to display
   FSUser? fsUser;
   List<Car?> cars = [];
+
+  // get image from smart phone
+  XFile? newAvatar;
+  final picker = ImagePicker();
+
+  // text controller for input
+  var makerEditor = TextEditingController();
+  var licenseIdEditor = TextEditingController();
+
+  Future<void> _uploadImage(ImageSource source, String uid) async {
+    // select file (from gallery | from camera)
+    XFile? img = await picker.pickImage(source: source);
+
+    // upload file to storage "avatars"
+    UploadTask uploadTask = storageRef.putFile(File(img!.path));
+
+    // get downloadUrl from storage (UploadTask extends Future<TaskSnapshot>)
+    final location = await (await uploadTask).ref.getDownloadURL();
+
+    // update user data --> data changes --> widget re-render
+    final snapShot = await fsUsers.where('uid', isEqualTo: uid).get();
+    DocumentReference docRef = snapShot.docs[0].reference;
+
+    var batch = FirebaseFirestore.instance.batch();
+    //Updates the field value, using "docRef" as document reference
+    batch.update(docRef, {'imageUrl': location});
+    batch.commit();
+
+    await _getUserByUId(uid);
+  }
 
   Future<void> _getUserByUId(String uid) async {
     final snapShot = await fsUsers.where('uid', isEqualTo: uid).get();
@@ -37,6 +76,63 @@ class WelcomeScreenState extends State<WelcomeScreen> {
       cars = carsData;
     });
   }
+
+  // Future<void> _addNewCar(
+  //   String uid,
+  //   String maker,
+  //   String licenseId,
+  //   String imageUrl,
+  // ) async {}
+
+  // Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
+  //   await showModalBottomSheet(
+  //     context: context,
+  //     isScrollControlled: true,
+  //     builder: (BuildContext context) {
+  //       return Padding(
+  //         padding: EdgeInsets.only(
+  //           top: 20,
+  //           left: 20,
+  //           right: 20,
+  //           bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+  //         ),
+  //         child: Column(
+  //           mainAxisSize: MainAxisSize.min,
+  //           crossAxisAlignment: CrossAxisAlignment.start,
+  //           children: [
+  //             TextField(
+  //               controller: makerEditor,
+  //               decoration: InputDecoration(
+  //                 labelText: 'Maker',
+  //                 prefixIcon: Icon(
+  //                   Icons.precision_manufacturing_outlined,
+  //                   size: 27.5,
+  //                   color: Colors.orange[300],
+  //                 ),
+  //               ),
+  //             ),
+  //             TextField(
+  //               controller: licenseIdEditor,
+  //               decoration: InputDecoration(
+  //                 labelText: 'License Id',
+  //                 prefixIcon: Icon(
+  //                   Icons.app_registration_rounded,
+  //                   size: 27.5,
+  //                   color: Colors.orange[300],
+  //                 ),
+  //               ),
+  //             ),
+  //             const SizedBox(height: 20.0),
+  //             ElevatedButton(
+  //               onPressed: () {},
+  //               child: Text('Create'),
+  //             ),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
 
   @override
   void initState() {
@@ -101,7 +197,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
                       backgroundImage: NetworkImage(fsUser?.imageUrl ?? ""),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        _uploadImage(ImageSource.gallery, widget.uid);
+                      },
                       child: Container(
                         padding: const EdgeInsets.all(5.0),
                         decoration: BoxDecoration(
