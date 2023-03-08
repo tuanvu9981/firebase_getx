@@ -18,6 +18,7 @@ class SignUpScreenState extends State<SignUpScreen> {
   Widget build(BuildContext context) {
     var emailEditor = TextEditingController();
     var passwordEditor = TextEditingController();
+    var fullnameEditor = TextEditingController();
 
     var fgBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(20.0),
@@ -121,12 +122,44 @@ class SignUpScreenState extends State<SignUpScreen> {
               ),
             ),
           ),
+          const SizedBox(height: 20.0),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20.0),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.0),
+              boxShadow: [
+                BoxShadow(
+                  blurRadius: 10.0,
+                  spreadRadius: 7.0,
+                  offset: Offset(1, 1),
+                  color: Colors.grey.withOpacity(0.2),
+                )
+              ],
+            ),
+            child: TextField(
+              controller: fullnameEditor,
+              decoration: InputDecoration(
+                hintText: 'Your fullname',
+                prefixIcon: const Icon(
+                  Icons.person,
+                  color: Colors.deepOrangeAccent,
+                ),
+                focusedBorder: fgBorder,
+                enabledBorder: fgBorder,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+              ),
+            ),
+          ),
           const SizedBox(height: 40.0),
           GestureDetector(
             onTap: () {
               AuthController.instance.register(
                 emailEditor.text.trim(),
                 passwordEditor.text.trim(),
+                fullnameEditor.text.trim(),
               );
             },
             child: Container(

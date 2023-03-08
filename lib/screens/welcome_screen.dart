@@ -1,9 +1,34 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_getx/auth_controller.dart';
+import 'package:firebase_getx/models/fsuser.model.dart';
 import 'package:flutter/material.dart';
 
-class WelcomeScreen extends StatelessWidget {
-  final String email;
-  const WelcomeScreen({required this.email, Key? key}) : super(key: key);
+class WelcomeScreen extends StatefulWidget {
+  final String uid;
+  const WelcomeScreen({required this.uid, Key? key}) : super(key: key);
+
+  @override
+  WelcomeScreenState createState() => WelcomeScreenState();
+}
+
+class WelcomeScreenState extends State<WelcomeScreen> {
+  final fsUsers = FirebaseFirestore.instance.collection('users');
+  FSUser? fsUser;
+
+  Future<void> _getUserByUId(String uid) async {
+    final snapShot = await fsUsers.where('uid', isEqualTo: uid).get();
+    List<Map<String, dynamic>?> data =
+        snapShot.docs.map((e) => e.data()).toList();
+    setState(() {
+      fsUser = FSUser.fromJson(data[0]!);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserByUId(widget.uid);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,11 +55,32 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: screenHeight * 0.175),
-                const CircleAvatar(
-                  backgroundColor: Colors.white70,
-                  radius: 52.5,
-                  backgroundImage: AssetImage('assets/images/profile1.png'),
-                )
+                Stack(
+                  alignment: Alignment.bottomRight,
+                  children: [
+                    CircleAvatar(
+                      backgroundColor: Colors.white24,
+                      radius: 52.5,
+                      backgroundImage: NetworkImage(fsUser?.imageUrl ?? ""),
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Container(
+                        padding: const EdgeInsets.all(5.0),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: Colors.white,
+                          border: Border.all(color: Colors.grey, width: 0.25),
+                        ),
+                        child: const Icon(
+                          Icons.camera_alt,
+                          size: 22.5,
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ],
             ),
           ),
@@ -45,16 +91,22 @@ class WelcomeScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  "Welcome",
-                  style: TextStyle(
-                    fontSize: 55.0,
-                    fontWeight: FontWeight.bold,
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        fsUser?.fullname ?? "",
+                        style: const TextStyle(
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      Text(
+                        fsUser?.email ?? "",
+                        style: TextStyle(fontSize: 17, color: Colors.grey[500]),
+                      ),
+                    ],
                   ),
-                ),
-                Text(
-                  email,
-                  style: TextStyle(fontSize: 20, color: Colors.grey[500]),
                 ),
                 const SizedBox(height: 150.0),
                 GestureDetector(
