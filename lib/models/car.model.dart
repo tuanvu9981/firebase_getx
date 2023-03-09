@@ -4,7 +4,7 @@ class Car {
   String? imageUrl;
   String? userId;
 
-  Car({this.maker, this.licenseId, this.imageUrl});
+  Car({this.maker, this.licenseId, this.imageUrl, this.userId});
 
   Car.fromJson(Map<String, dynamic> json) {
     imageUrl = json['imageUrl'];

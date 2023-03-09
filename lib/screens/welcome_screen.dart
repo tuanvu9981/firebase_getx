@@ -22,7 +22,8 @@ class WelcomeScreenState extends State<WelcomeScreen> {
   final fsCars = FirebaseFirestore.instance.collection('cars');
 
   // instance storage
-  final storageRef = FirebaseStorage.instance.ref().child('avatars');
+  final storageAvatarRef = FirebaseStorage.instance.ref().child('avatars/');
+  final storageImgRef = FirebaseStorage.instance.ref().child('images/');
 
   // variables to display
   FSUser? fsUser;
@@ -30,6 +31,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
 
   // get image from smart phone
   XFile? newAvatar;
+  XFile? newCarImg;
   final picker = ImagePicker();
 
   // text controller for input
@@ -41,7 +43,8 @@ class WelcomeScreenState extends State<WelcomeScreen> {
     XFile? img = await picker.pickImage(source: source);
 
     // upload file to storage "avatars"
-    UploadTask uploadTask = storageRef.putFile(File(img!.path));
+    UploadTask uploadTask =
+        storageAvatarRef.child(img!.name).putFile(File(img.path));
 
     // get downloadUrl from storage (UploadTask extends Future<TaskSnapshot>)
     final location = await (await uploadTask).ref.getDownloadURL();
@@ -77,62 +80,123 @@ class WelcomeScreenState extends State<WelcomeScreen> {
     });
   }
 
-  // Future<void> _addNewCar(
-  //   String uid,
-  //   String maker,
-  //   String licenseId,
-  //   String imageUrl,
-  // ) async {}
+  Future<void> _setCarImgUrl(ImageSource source) async {
+    XFile? img = await picker.pickImage(source: source);
+    setState(() {
+      newCarImg = img;
+    });
+  }
 
-  // Future<void> _create([DocumentSnapshot? documentSnapshot]) async {
-  //   await showModalBottomSheet(
-  //     context: context,
-  //     isScrollControlled: true,
-  //     builder: (BuildContext context) {
-  //       return Padding(
-  //         padding: EdgeInsets.only(
-  //           top: 20,
-  //           left: 20,
-  //           right: 20,
-  //           bottom: MediaQuery.of(context).viewInsets.bottom + 20,
-  //         ),
-  //         child: Column(
-  //           mainAxisSize: MainAxisSize.min,
-  //           crossAxisAlignment: CrossAxisAlignment.start,
-  //           children: [
-  //             TextField(
-  //               controller: makerEditor,
-  //               decoration: InputDecoration(
-  //                 labelText: 'Maker',
-  //                 prefixIcon: Icon(
-  //                   Icons.precision_manufacturing_outlined,
-  //                   size: 27.5,
-  //                   color: Colors.orange[300],
-  //                 ),
-  //               ),
-  //             ),
-  //             TextField(
-  //               controller: licenseIdEditor,
-  //               decoration: InputDecoration(
-  //                 labelText: 'License Id',
-  //                 prefixIcon: Icon(
-  //                   Icons.app_registration_rounded,
-  //                   size: 27.5,
-  //                   color: Colors.orange[300],
-  //                 ),
-  //               ),
-  //             ),
-  //             const SizedBox(height: 20.0),
-  //             ElevatedButton(
-  //               onPressed: () {},
-  //               child: Text('Create'),
-  //             ),
-  //           ],
-  //         ),
-  //       );
-  //     },
-  //   );
-  // }
+  Future<void> _addNewCar(
+    String uid,
+    String maker,
+    String licenseId,
+    XFile? image,
+  ) async {
+    // upload file to storage "images"
+    UploadTask uploadTask =
+        storageImgRef.child(image!.name).putFile(File(image.path));
+
+    // get downloadUrl from storage (UploadTask extends Future<TaskSnapshot>)
+    final location = await (await uploadTask).ref.getDownloadURL();
+
+    // create firestore documents car
+    final newCar = Car(
+      maker: maker,
+      licenseId: licenseId,
+      userId: uid,
+      imageUrl: location,
+    );
+    await fsCars.add(newCar.toJson());
+    await _getCarsOfUser(uid);
+    setState(() {
+      newCarImg = null;
+    });
+  }
+
+  Future<void> _create(XFile? newCarImg, BuildContext context) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return Padding(
+          padding: EdgeInsets.only(
+            top: 20,
+            left: 20,
+            right: 20,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 20,
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              newCarImg == null
+                  ? GestureDetector(
+                      onTap: () {
+                        _setCarImgUrl(ImageSource.gallery);
+                      },
+                      child: Container(
+                        width: 100,
+                        height: 100,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border.all(width: 0.5),
+                        ),
+                        child: const Icon(Icons.add, size: 30.0),
+                      ),
+                    )
+                  : GestureDetector(
+                      onTap: () {
+                        _setCarImgUrl(ImageSource.gallery);
+                      },
+                      child: Image.file(
+                        File(newCarImg.path),
+                        fit: BoxFit.cover,
+                        width: 100.0,
+                        height: 80.0,
+                      ),
+                    ),
+              const SizedBox(height: 20.0),
+              TextField(
+                controller: makerEditor,
+                decoration: InputDecoration(
+                  labelText: 'Maker',
+                  prefixIcon: Icon(
+                    Icons.precision_manufacturing_outlined,
+                    size: 27.5,
+                    color: Colors.orange[300],
+                  ),
+                ),
+              ),
+              TextField(
+                controller: licenseIdEditor,
+                decoration: InputDecoration(
+                  labelText: 'License Id',
+                  prefixIcon: Icon(
+                    Icons.app_registration_rounded,
+                    size: 27.5,
+                    color: Colors.orange[300],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: () {
+                  _addNewCar(
+                    widget.uid,
+                    makerEditor.text.trim(),
+                    licenseIdEditor.text.trim(),
+                    newCarImg,
+                  );
+                  Navigator.pop(context);
+                },
+                child: Text('Create'),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 
   @override
   void initState() {
@@ -262,7 +326,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
         ],
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          _create(newCarImg, context);
+        },
         backgroundColor: Colors.amber[200],
         child: const Icon(Icons.add, size: 30.0, color: Colors.white),
       ),
