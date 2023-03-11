@@ -1,4 +1,5 @@
 import 'package:firebase_getx/models/car.model.dart';
+import 'package:firebase_getx/screens/update_car_screen.dart';
 import 'package:flutter/material.dart';
 
 class CarCard extends StatelessWidget {
@@ -73,14 +74,44 @@ class CarCard extends StatelessWidget {
               Expanded(
                 flex: 1,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          content: const Text('Are you sure to delete?'),
+                          actions: <Widget>[
+                            TextButton(
+                              child: const Text('Cancel'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            TextButton(
+                              child: const Text('Delete'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
                   child: Icon(Icons.delete, size: 27.5, color: Colors.red),
                 ),
               ),
               Expanded(
                 flex: 1,
                 child: GestureDetector(
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: ((context) => UpdateCarScreen(car: car!)),
+                      ),
+                    );
+                  },
                   child: const Icon(
                     Icons.change_circle_outlined,
                     size: 27.5,
