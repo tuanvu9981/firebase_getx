@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_getx/models/car.model.dart';
 import 'package:firebase_getx/screens/update_car_screen.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,12 @@ class CarCard extends StatelessWidget {
   CarCard({this.car, Key? key}) : super(key: key);
 
   final txtStyle = const TextStyle(fontSize: 16.5, color: Colors.black);
+  final fsCars = FirebaseFirestore.instance.collection('cars');
+
+  Future<void> _deleteCarById(String? id) async {
+    await fsCars.doc(id).delete();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -90,6 +97,7 @@ class CarCard extends StatelessWidget {
                             TextButton(
                               child: const Text('Delete'),
                               onPressed: () {
+                                _deleteCarById(car!.id);
                                 Navigator.of(context).pop();
                               },
                             ),

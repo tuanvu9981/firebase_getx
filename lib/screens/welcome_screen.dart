@@ -68,8 +68,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<void> _getCarsOfUser(String uid) async {
     final snapShots = await fsCars.where('userId', isEqualTo: uid).get();
-    List<Map<String, dynamic>?> data =
-        snapShots.docs.map((e) => e.data()).toList();
+    List<Map<String, dynamic>?> data = snapShots.docs.map((e) {
+      return {"id": e.id, ...e.data()};
+    }).toList();
     List<Car?> carsData = data.map((e) => Car.fromJson(e!)).toList();
     setState(() {
       cars = carsData;
