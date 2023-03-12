@@ -5,13 +5,16 @@ import 'package:flutter/material.dart';
 
 class CarCard extends StatelessWidget {
   Car? car;
-  CarCard({this.car, Key? key}) : super(key: key);
+  void Function(String? id) removeCar;
+  CarCard({this.car, Key? key, required this.removeCar}) : super(key: key);
 
   final txtStyle = const TextStyle(fontSize: 16.5, color: Colors.black);
   final fsCars = FirebaseFirestore.instance.collection('cars');
 
-  Future<void> _deleteCarById(String? id) async {
-    await fsCars.doc(id).delete();
+  Future<void> _deleteCarById(String? licenseId) async {
+    final query = await fsCars.where('licenseId', isEqualTo: licenseId).get();
+    DocumentReference ref = query.docs[0].reference;
+    await ref.delete();
   }
 
   @override
@@ -97,7 +100,8 @@ class CarCard extends StatelessWidget {
                             TextButton(
                               child: const Text('Delete'),
                               onPressed: () {
-                                _deleteCarById(car!.id);
+                                removeCar(car!.licenseId);
+                                _deleteCarById(car!.licenseId);
                                 Navigator.of(context).pop();
                               },
                             ),

@@ -68,12 +68,23 @@ class WelcomeScreenState extends State<WelcomeScreen> {
 
   Future<void> _getCarsOfUser(String uid) async {
     final snapShots = await fsCars.where('userId', isEqualTo: uid).get();
-    List<Map<String, dynamic>?> data = snapShots.docs.map((e) {
-      return {"id": e.id, ...e.data()};
+    List<Car?> data = snapShots.docs.map((e) {
+      return Car.fromJson({'id': e.id, ...e.data()});
     }).toList();
-    List<Car?> carsData = data.map((e) => Car.fromJson(e!)).toList();
     setState(() {
-      cars = carsData;
+      cars = data;
+    });
+  }
+
+  void _addCarToList(Car? newCar) {
+    setState(() {
+      cars.add(newCar);
+    });
+  }
+
+  void _removeCarFromList(String? id) {
+    setState(() {
+      cars.removeWhere((element) => element!.licenseId == id);
     });
   }
 
@@ -85,7 +96,9 @@ class WelcomeScreenState extends State<WelcomeScreen> {
   }
 
   List<Widget> _buildCarList(List<Car?> cars) {
-    return cars.map((e) => CarCard(car: e)).toList();
+    return cars
+        .map((e) => CarCard(car: e, removeCar: _removeCarFromList))
+        .toList();
   }
 
   @override
@@ -209,7 +222,10 @@ class WelcomeScreenState extends State<WelcomeScreen> {
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (BuildContext context) => AddCarScreen(uid: widget.uid),
+              builder: (BuildContext context) => AddCarScreen(
+                uid: widget.uid,
+                addCar: _addCarToList,
+              ),
             ),
           );
         },

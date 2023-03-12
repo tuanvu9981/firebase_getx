@@ -9,7 +9,12 @@ import '../models/car.model.dart';
 
 class AddCarScreen extends StatefulWidget {
   String uid;
-  AddCarScreen({required this.uid, Key? key}) : super(key: key);
+  void Function(Car? newCar) addCar;
+  AddCarScreen({
+    required this.addCar,
+    required this.uid,
+    Key? key,
+  }) : super(key: key);
 
   @override
   AddCarScreenState createState() => AddCarScreenState();
@@ -56,6 +61,7 @@ class AddCarScreenState extends State<AddCarScreen> {
       userId: uid,
       imageUrl: location,
     );
+    widget.addCar(newCar);
     await fsCars.add(newCar.toJson());
     setState(() {
       newCarImg = null;
