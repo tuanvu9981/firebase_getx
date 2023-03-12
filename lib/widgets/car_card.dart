@@ -21,7 +21,7 @@ class CarCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(vertical: 10.0),
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 10.0),
       decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(10.0)),
         color: Colors.white,
@@ -39,10 +39,16 @@ class CarCard extends StatelessWidget {
             children: [
               Expanded(
                 flex: 3,
-                child: Image(
-                  image: NetworkImage(car!.imageUrl!),
-                  fit: BoxFit.cover,
-                  height: 120.0,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image(
+                      image: NetworkImage(car!.imageUrl!),
+                      fit: BoxFit.fill,
+                      height: 120.0,
+                    ),
+                  ),
                 ),
               ),
               Expanded(

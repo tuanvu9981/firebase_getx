@@ -204,7 +204,7 @@ class WelcomeScreenState extends State<WelcomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text(
-                  "My car list",
+                  "My list",
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 25.0,
