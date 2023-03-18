@@ -8,22 +8,22 @@ Login & Logout with getx Flutter
     <th>
         <img 
             src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/1_signin.jpg"
-            width="50%" 
-            height="50%"
+            width="60%" 
+            height="60%"
         />
     </th>
     <th>
         <img 
             src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/2_main_screen.jpg"
-            width="50%" 
-            height="50%"
+            width="60%" 
+            height="60%"
         />
     </th>
     <th>
         <img 
             src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/3_add_new_car.jpg"
-            width="50%" 
-            height="50%"
+            width="60%" 
+            height="60%"
         />
     </th>
   </tr>
@@ -32,6 +32,38 @@ Login & Logout with getx Flutter
     <td align="center"><b>Màn hình đăng nhập</b></td>
     <td align="center"><b>Màn hình chính</b></td>
     <td align="center"><b> Màn hình thêm mới 1 xe</b></td>
+  </tr>
+</table>
+
+<table align="center">
+  <tr align="center">
+    <th>
+        <img 
+            src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/4_update_car_begin.jpg"
+            width="60%" 
+            height="60%"
+        />
+    </th>
+    <th>
+        <img 
+            src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/5_update_car_selected_image.jpg"
+            width="60%" 
+            height="60%"
+        />
+    </th>
+    <th>
+        <img 
+            src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/6_delete_cars.jpg"
+            width="60%" 
+            height="60%"
+        />
+    </th>
+  </tr>
+
+  <tr>
+    <td align="center"><b>Màn hình update thông tin xe</b></td>
+    <td align="center"><b>Màn hình hiển thị ảnh đã xe mới đã được chọn</b></td>
+    <td align="center"><b>Màn hình xác nhận xóa xe</b></td>
   </tr>
 </table>
 
