@@ -2,6 +2,39 @@
 
 Login & Logout with getx Flutter
 
+### Illustration
+<table align="center">
+  <tr align="center">
+    <th>
+        <img 
+            src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/1_signin.jpg"
+            width="50%" 
+            height="50%"
+        />
+    </th>
+    <th>
+        <img 
+            src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/2_main_screen.jpg"
+            width="50%" 
+            height="50%"
+        />
+    </th>
+    <th>
+        <img 
+            src="https://github.com/tuanvu9981/firebase_getx/blob/master/illustration/3_add_new_car.jpg"
+            width="50%" 
+            height="50%"
+        />
+    </th>
+  </tr>
+
+  <tr>
+    <td align="center"><b>Màn hình đăng nhập</b></td>
+    <td align="center"><b>Màn hình chính</b></td>
+    <td align="center"><b> Màn hình thêm mới 1 xe</b></td>
+  </tr>
+</table>
+
 ### Reference
 1. [Video 1](https://www.youtube.com/watch?v=o_ZeLqpqt90)
 2. [Video 2](https://www.youtube.com/watch?v=V2c04_JWoHA&t=105s)
